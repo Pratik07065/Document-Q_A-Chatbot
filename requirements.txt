@@ -1,0 +1,10 @@
+streamlit==1.37.1
+pypdf==4.3.1
+python-docx==1.1.0
+langchain==0.1.20
+langchain-text-splitters==0.0.2
+langchain-google-genai==1.0.7
+langchain-community==0.0.39
+faiss-cpu==1.8.0
+sentence-transformers==3.0.1
+google-generativeai==0.5.4
