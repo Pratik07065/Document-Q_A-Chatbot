@@ -41,7 +41,7 @@ with st.sidebar:
     else:
         gemini_model = st.selectbox(
             "Gemini Embedding Model:",
-            ["models/text-embedding-004"],
+            ["models/text-embedding-004","gemini-embedding-001", "gemini-embedding-2"],
             index=0,
             help="'models/text-embedding-004' is the only official production embedding model for Gemini API."
         )
