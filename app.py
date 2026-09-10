@@ -22,13 +22,36 @@ st.title("Document Q&A (PDF & Word)")
 # Sidebar for API key and File Upload
 with st.sidebar:
     st.header("Configuration")
-    api_key = st.text_input("Enter Gemini API Key:", type="password")
+    api_key = st.text_input(
+        "Enter Gemini API Key:", 
+        value=os.getenv("GEMINI_API_KEY", ""), 
+        type="password"
+    )
+
+    model_choice = st.selectbox(
+        "Chat Model (Fast / Lite):",
+        [
+            "models/gemini-3.5-flash-lite (Ultra Fast / Lite)",
+            "models/gemini-3.5-flash (Fast & Accurate)",
+            "models/gemini-3.5-pro (High Reasoning)",
+            "gemini-3.1-pro-preview (Gemini 3.1 Pro)",
+            "gemini-3.5-flash-lite (Fast Lite)",
+            "Custom Model Name..."
+        ],
+        index=0,
+        help="Select a fast or lite model for low latency responses, or choose custom to type any model identifier."
+    )
+
+    if model_choice == "Custom Model Name...":
+        llm_model = st.text_input("Enter Model Identifier:", value="models/gemini-3.5-flash-lite")
+    else:
+        llm_model = model_choice.split(" ")[0]
     
     embedding_provider = st.radio(
         "Embedding Method:",
         ["Local Embeddings", "Gemini Cloud API"],
         index=0,
-        help="Local embeddings (like Sentence-Transformers / all-MiniLM) run directly on your computer without hitting API quotas or model not found errors."
+        help="Local embeddings (like Sentence-Transformers / all-MiniLM) run directly on your computer without hitting API quotas or network delays."
     )
     
     if "Local" in embedding_provider:
@@ -41,9 +64,9 @@ with st.sidebar:
     else:
         gemini_model = st.selectbox(
             "Gemini Embedding Model:",
-            ["models/text-embedding-004","gemini-embedding-001", "gemini-embedding-2"],
+            ["models/text-embedding-004", "text-embedding-004"],
             index=0,
-            help="'models/text-embedding-004' is the only official production embedding model for Gemini API."
+            help="'models/text-embedding-004' is the official production embedding model for Gemini API."
         )
     
     uploaded_files = st.file_uploader(
@@ -153,9 +176,9 @@ if user_query:
             ("human", "{question}"),
         ])
 
-        # 5. Gemini LLM setup
+        # 5. Gemini LLM setup with low latency
         llm = ChatGoogleGenerativeAI(
-            model="models/gemini-3.6-flash", 
+            model=llm_model, 
             google_api_key=api_key, 
             temperature=0.0
         )
@@ -169,10 +192,9 @@ if user_query:
         )
 
         with st.chat_message("assistant"):
-            with st.spinner("Generating grounded answer..."):
-                try:
-                    answer = rag_chain.invoke(user_query)
-                    st.markdown(answer)
-                    st.session_state.messages.append({"role": "assistant", "content": answer})
-                except Exception as e:
-                    st.error(f"Error generating answer: {e}")
+            try:
+                # Stream response tokens in real-time for instant feedback
+                answer = st.write_stream(rag_chain.stream(user_query))
+                st.session_state.messages.append({"role": "assistant", "content": answer})
+            except Exception as e:
+                st.error(f"Error generating answer: {e}")

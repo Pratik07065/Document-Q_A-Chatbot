@@ -77,12 +77,19 @@ RAG-CHATBOT/
 3. **Embedding**: Text chunks are converted to embeddings using your chosen method
 4. **Vector Storage**: Embeddings are stored in FAISS for fast similarity search
 5. **Retrieval**: User questions are embedded and matched against document chunks
-6. **Generation**: Retrieved context is passed to Gemini for generating accurate answers
+6. **Generation**: Retrieved context is passed to Gemini for generating accurate answers with real-time token streaming
 
-## Supported Embedding Models
+## Supported Models
+
+### Chat Models (Fast & Lite)
+- **models/gemini-3.5-flash-lite**: Ultra-low latency, lightweight model (fastest responses)
+- **models/gemini-3.5-flash**: Fast and highly accurate production model
+- **models/gemini-3.5-pro**: High-reasoning model for complex document QA
+- **gemini-3.1-pro-preview**: Gemini 3 flagship preview model
+- **Custom Model Name**: Type any custom Gemini model identifier directly in the UI
 
 ### Local Embeddings
-- **all-MiniLM-L6-v2**: Lightweight, high-performance model (recommended)
+- **all-MiniLM-L6-v2**: Lightweight, high-performance model (recommended for privacy and 0ms network latency)
 - **BAAI/bge-small-en-v1.5**: Alternative small embedding model
 
 ### Cloud Embeddings
