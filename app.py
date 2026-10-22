@@ -32,10 +32,8 @@ with st.sidebar:
         "Chat Model (Fast / Lite):",
         [
             "models/gemini-3.5-flash-lite (Ultra Fast / Lite)",
-            "models/gemini-3.5-flash (Fast & Accurate)",
-            "models/gemini-3.5-pro (High Reasoning)",
-            "gemini-3.1-pro-preview (Gemini 3.1 Pro)",
-            "gemini-3.5-flash-lite (Fast Lite)",
+            "models/gemini-3.5-flash",
+            "models/gemini-3.5-pro",
             "Custom Model Name..."
         ],
         index=0,
@@ -64,7 +62,7 @@ with st.sidebar:
     else:
         gemini_model = st.selectbox(
             "Gemini Embedding Model:",
-            ["models/text-embedding-004", "text-embedding-004"],
+            ["gemini-embedding-001","text-embedding-004"],
             index=0,
             help="'models/text-embedding-004' is the official production embedding model for Gemini API."
         )
